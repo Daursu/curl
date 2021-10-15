@@ -166,6 +166,7 @@ class Curl
     /**
      * @param $method string method of query
      * @return array|NULL
+     * @throws \Exception
      */
     protected function request($method)
     {
@@ -173,6 +174,9 @@ class Curl
         $this->method = $method;
         $this->prepareRequest();
         $this->response = curl_exec($this->resource);
+        if ($this->response === false) {
+            throw new \Exception(curl_error($this->resource));
+        }
         curl_close($this->resource);
         return $this->parseResponse();
     }
